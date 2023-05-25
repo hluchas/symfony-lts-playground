@@ -1,6 +1,14 @@
 {% extends "base.html.twig" %}
 
 {% block content %}
-    {{ text }}
+    {% if products|length %}
+        {% for product in products %}
+            <div>
+                <h2>{{ product.name }}</h2>
+                <span>{{ product.price }}</span>
+            </div>
+        {% endfor %}
+    {% else %}
+        no products defined
+    {% endif %}
 {%  endblock %}
-
