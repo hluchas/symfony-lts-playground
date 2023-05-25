@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class IndexController
 {
     /**
      * @Route ("/", name="app_inde_index")
+     * @Template("index/index.html.twig")
      */
-    public function index(): Response
+    public function index(): array
     {
-        return new Response(
-            '<html><body>Hello world</body></html>'
-        );
+        return [
+            'page_title' => 'Hello world!',
+            'text' => 'Hello you!',
+        ];
     }
 }
