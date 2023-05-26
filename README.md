@@ -12,6 +12,8 @@ yarn watch
 ```
 ### Testing
 ```bash
+bin/console doctrine:database:create --env=test
+bin/console doctrine:schema:create --env=test
 composer all #run all checks
 composer test #run PHPUnit tests
 ```
