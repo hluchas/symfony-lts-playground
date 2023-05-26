@@ -62,9 +62,11 @@
             "@auto-scripts"
         ],
         "all": [
+            "@fix",
             "@test"
         ],
-        "test": "bin/phpunit"
+        "test": "bin/phpunit",
+        "fix": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -76,6 +78,7 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.17",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",
