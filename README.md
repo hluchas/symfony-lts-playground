@@ -1,3 +1,6 @@
+### Stack
+ - Symfony LTS
+ - VueJS 3.2
 ### Req
  - PHP 8.2
  - MySQL 8
