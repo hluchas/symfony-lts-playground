@@ -16,5 +16,6 @@ bin/console doctrine:database:create --env=test
 bin/console doctrine:schema:create --env=test
 composer all #run all checks
 composer fix #run CS Fixer
+composer stan #run PHPStan
 composer test #run PHPUnit tests
 ```
