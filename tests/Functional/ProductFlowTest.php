@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration;
+namespace App\Tests\Functional;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
