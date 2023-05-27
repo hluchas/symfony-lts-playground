@@ -7,6 +7,8 @@
  - Node v20.2.0
 ### Installation (dev)
 ```bash
+cp .env.dist .env
+cp .env.test.dist .env.test
 composer install
 bin/console doctrine:database:create
 bin/console doctrine:schema:create
