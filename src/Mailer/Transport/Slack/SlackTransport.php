@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Mailer\Transport\Slack;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
 
@@ -13,8 +16,6 @@ class SlackTransport extends AbstractTransport
 {
     public function __construct(
         private readonly string $webhookUrl,
-        private readonly string $accessToken,
-        private readonly string $refreshToken,
         EventDispatcherInterface $dispatcher = null,
         LoggerInterface $logger = null
     ) {
@@ -23,8 +24,13 @@ class SlackTransport extends AbstractTransport
 
     protected function doSend(SentMessage $message): void
     {
-        // TODO: Implement doSend() method.
-        throw new \RuntimeException('Not implemented');
+        (new Client())->request(Request::METHOD_POST, $this->webhookUrl, [
+            RequestOptions::JSON => [
+                'text' => $message->toString(),
+            ],
+        ]);
+
+        $this->getLogger()->info('Slack message sent');
     }
 
     public function __toString(): string

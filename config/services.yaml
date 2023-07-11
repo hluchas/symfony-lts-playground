@@ -27,5 +27,3 @@ services:
         tags: [mailer.transport_factory]
         arguments:
             $webhookUrl: '%env(SLACK_WEBHOOK_URL)%'
-            $accessToken: '%env(SLACK_ACCESS_TOKEN)%'
-            $refreshToken:  '%env(SLACK_REFRESH_TOKEN)%'
