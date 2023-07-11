@@ -42,8 +42,7 @@ class SlackMessageCommand extends Command
             ->from('from@example.com')
             ->to('to@example.com')
             ->subject($input->getArgument('subject'))
-            ->text($input->getArgument('message'))
-//            ->html('<p>See Twig integration for better HTML integration!</p>')
+            ->html($input->getArgument('message'))
         ;
 
         $this->mailer->send($email);

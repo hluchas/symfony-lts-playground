@@ -44,13 +44,13 @@ class SlackTransportTest extends TestCase
             ->from('from@example.com')
             ->to('to@example.com')
             ->subject('subject')
-            ->text('message');
+            ->html('<p>message</p>');
 
         $this->client->expects($this->once())
             ->method('request')
             ->with(Request::METHOD_POST, self::WEBHOOK_URL, [
                 RequestOptions::JSON => [
-                    'text' => $message->toString(),
+                    'text' => strip_tags($message->toString()),
                 ],
             ]);
 
