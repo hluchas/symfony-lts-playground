@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mailer\Transport\Slack;
 
+use GuzzleHttp\Client;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Transport\AbstractTransportFactory;
@@ -15,6 +16,7 @@ class SlackTransportFactory extends AbstractTransportFactory
 {
     public function __construct(
         private readonly string $webhookUrl,
+        private readonly Client $guzzleClient,
         EventDispatcherInterface $dispatcher = null,
         HttpClientInterface $httpClient = null, // Unused
         LoggerInterface $logger = null
@@ -34,6 +36,7 @@ class SlackTransportFactory extends AbstractTransportFactory
     {
         $transport = new SlackTransport(
             $this->webhookUrl,
+            $this->guzzleClient,
             $this->dispatcher,
             $this->logger
         );

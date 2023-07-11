@@ -16,6 +16,7 @@ class SlackTransport extends AbstractTransport
 {
     public function __construct(
         private readonly string $webhookUrl,
+        private readonly Client $client,
         EventDispatcherInterface $dispatcher = null,
         LoggerInterface $logger = null
     ) {
@@ -28,7 +29,7 @@ class SlackTransport extends AbstractTransport
         $message = str_replace('<br>', PHP_EOL, $message); // Replace HTML tag with new line
         $message = strip_tags($message); // Remove HTML tags
 
-        (new Client())->request(Request::METHOD_POST, $this->webhookUrl, [
+        $this->client->request(Request::METHOD_POST, $this->webhookUrl, [
             RequestOptions::JSON => [
                 'text' => $message,
             ],
