@@ -24,9 +24,13 @@ class SlackTransport extends AbstractTransport
 
     protected function doSend(SentMessage $message): void
     {
+        $message = $message->toString();
+        $message = str_replace('<br>', PHP_EOL, $message); // Replace HTML tag with new line
+        $message = strip_tags($message); // Remove HTML tags
+
         (new Client())->request(Request::METHOD_POST, $this->webhookUrl, [
             RequestOptions::JSON => [
-                'text' => $message->toString(),
+                'text' => $message,
             ],
         ]);
 
