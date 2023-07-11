@@ -25,9 +25,7 @@ class SlackTransport extends AbstractTransport
 
     protected function doSend(SentMessage $message): void
     {
-        $rawMessage = $message->toString();
-        $rawMessage = str_replace('<br>', PHP_EOL, $rawMessage); // Replace HTML tag with new line
-        $rawMessage = strip_tags($rawMessage); // Remove HTML tags
+        $rawMessage = $this->getRawMessage($message);
 
         $this->client->request(Request::METHOD_POST, $this->webhookUrl, [
             RequestOptions::JSON => [
@@ -41,5 +39,14 @@ class SlackTransport extends AbstractTransport
     public function __toString(): string
     {
         return $this->webhookUrl;
+    }
+
+    private function getRawMessage(SentMessage $message): string
+    {
+        $rawMessage = $message->toString();
+        $rawMessage = str_replace('<br>', PHP_EOL, $rawMessage); // Replace HTML tag with new line
+        $rawMessage = strip_tags($rawMessage); // Remove HTML tags
+
+        return $rawMessage;
     }
 }
