@@ -9,7 +9,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Transport\AbstractTransportFactory;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SlackTransportFactory extends AbstractTransportFactory
 {
@@ -18,7 +17,7 @@ class SlackTransportFactory extends AbstractTransportFactory
         private readonly string $accessToken,
         private readonly string $refreshToken,
         EventDispatcherInterface $dispatcher = null,
-        HttpClientInterface $client = null,
+        $client = null, // Unused
         LoggerInterface $logger = null
     ) {
         parent::__construct($dispatcher, $client, $logger);
