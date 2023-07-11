@@ -13,6 +13,8 @@ class IndexController extends AbstractController
      * @Route ("/", name="app_index_index")
      *
      * @Template("index/index.html.twig")
+     *
+     * @return array<string, mixed>
      */
     public function index(ProductRepository $productRepository): array
     {

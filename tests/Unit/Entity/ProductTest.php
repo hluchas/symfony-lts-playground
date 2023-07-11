@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ProductTest extends TestCase
 {
-    public function testName()
+    public function testName(): void
     {
         $name = 'name';
 
