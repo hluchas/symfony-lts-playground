@@ -1,0 +1,36 @@
+#!/bin/bash
+
+COMPOSE="docker-compose"
+
+function build-app {
+    # todo Migration is missing
+    ./dcp composer install
+    ./dcp bin/console cache:pool:clear cache.global_clearer
+    ./dcp yarn install
+    ./dcp yarn encore dev
+    ./dcp rm -rf var/log/*
+}
+
+function build-symfony {
+    $COMPOSE up -d --build
+    build-app
+}
+
+if [ $# -gt 0 ]; then
+    if [ "$1" == "up" ] || [ "$1" == "start" ]; then
+        $COMPOSE up -d
+    elif [ "$1" == "build-app" ] || [ "$1" == "rebuild-app" ]; then
+        build-app
+    elif [ "$1" == "build" ] || [ "$1" == "rebuild" ]; then
+        build-symfony
+    elif [ "$1" == "stop" ]; then
+        $COMPOSE stop
+    elif [ "$1" == "reload" ] || [ "$1" == "restart" ]; then
+        $COMPOSE stop && $COMPOSE up -d
+    else
+        EXEC_CMD="cd /var/www && $@"
+        docker exec -it php bash -c "$EXEC_CMD"
+    fi
+else
+    $COMPOSE ps
+fi
