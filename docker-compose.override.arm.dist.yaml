@@ -5,3 +5,6 @@ services:
 
     mysql:
         image: arm64v8/mysql
+
+    mailhog:
+        image: hluchas/mailhog:arm-latest
