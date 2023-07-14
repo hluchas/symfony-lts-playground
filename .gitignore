@@ -34,4 +34,5 @@ yarn-error.log
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 
+### Docker ###
 docker-compose.override.yaml
