@@ -1,0 +1,10 @@
+# Template for Apple M1 machines
+# Turn on this feature https://www.docker.com/blog/speed-boost-achievement-unlocked-on-docker-desktop-4-6-for-mac/
+version: '3.9'
+services:
+    
+    mysql:
+        platform: linux/x86_64
+    
+    php:
+        image: container-registry.office.klikpojisteni.cz:5005/klik.cz/symklik/php-apache-dev:arm-latest
