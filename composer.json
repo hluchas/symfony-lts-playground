@@ -1,4 +1,6 @@
 {
+    "name": "hluchas/symfony-lts-playground",
+    "description": "just a playground for symfony 5.4 LTS",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
