@@ -1,0 +1,92 @@
+name: App build and tests
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-versions: ['8.2']
+        db-types: ['MySQL']
+
+    name: PHPUnit ${{ matrix.php-versions }} ${{ matrix.db-types }}
+
+    services:
+      # Docker
+      db:
+        image: mysql:8.0.22
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: symfony_test
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Environment
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.test.dist', '.env');"
+
+#      - name: Set APP_ENV to ci
+#        run: echo "APP_ENV=ci" >> $GITHUB_ENV
+
+      # Composer
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      # Symfony requirements
+      - name: Check Symfony requirements
+        run: vendor/bin/requirements-checker
+
+      - name: Check the Symfony console
+        run: |
+          bin/console about
+
+      #      # Test suite - not working db connection
+      #      - name: Run test suite
+      #        run: composer run-script test
+
+      # Test suite - not working db connection
+      - name: Run unit tests
+        run: composer run-script test
+
+      # CS Fixer
+      - name: Run CS Fixer
+        run: composer run-script check
+
+      # PHPStan
+      - name: Run PHPStan
+        run: composer run-script stan
+
+      # Yarn
+      - name: Prepare Node for Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Yarn build
+        run: yarn run encore production
