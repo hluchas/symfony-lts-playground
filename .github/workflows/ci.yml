@@ -20,24 +20,33 @@ jobs:
 
     services:
       # Docker
-      db:
-        image: mysql:8.0.22
+      mysql:
+        image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: symfony_test
+          MYSQL_DATABASE: symfony
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
         ports:
-          - 3306
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+      #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
+      # change this to (see https://github.com/shivammathur/setup-php#bookmark-versioning):
+      # uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@2cb9b829437ee246e9b3cac53555a39208ca6d28
+        with:
+          php-version: '8.2'
+
       - uses: actions/checkout@v3
 
       # Environment
       - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.test.dist', '.env');"
+        run: php -r "file_exists('.env') || copy('.env.dist', '.env');"
+      - name: Copy .env.test
+        run: php -r "file_exists('.env.test') || copy('.env.test.dist', '.env.test');"
 
-#      - name: Set APP_ENV to ci
-#        run: echo "APP_ENV=ci" >> $GITHUB_ENV
+      - name: Set APP_ENV to test
+        run: echo "APP_ENV=test" >> $GITHUB_ENV
 
       # Composer
       - name: Validate composer.json and composer.lock
@@ -57,18 +66,6 @@ jobs:
       - name: Check Symfony requirements
         run: vendor/bin/requirements-checker
 
-      - name: Check the Symfony console
-        run: |
-          bin/console about
-
-      #      # Test suite - not working db connection
-      #      - name: Run test suite
-      #        run: composer run-script test
-
-      # Test suite - not working db connection
-      - name: Run unit tests
-        run: composer run-script test
-
       # CS Fixer
       - name: Run CS Fixer
         run: composer run-script check
@@ -76,6 +73,14 @@ jobs:
       # PHPStan
       - name: Run PHPStan
         run: composer run-script stan
+
+      - name: Create database and schema
+        run: |
+          bin/console doctrine:database:create --env=test && bin/console doctrine:schema:create --env=test
+
+      # Test suite
+      - name: Run unit tests
+        run: composer run-script test
 
       # Yarn
       - name: Prepare Node for Yarn
