@@ -4,67 +4,45 @@ declare(strict_types=1);
 
 namespace App\Bundles\AP\Entity;
 
-use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Entity;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-// #[Entity(repositoryClass: ProductRepository::class)]
-#[Entity]
+#[ORM\Entity]
 #[ORM\Table(name: 'ap_message')]
-#[ORM\UniqueConstraint(name: 'unique_idx', columns: ['key', 'language'])]
-class Message
+class Message implements TranslatableInterface
 {
+    use TranslatableTrait;
+
+    public const URGENCY_INFO = 'info';
+    public const URGENCY_CRITICAL = 'critical';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $key;
-
-    /**
-     * @see https://symfony.com/doc/5.4/components/intl.html
-     *
-     * @var string|null $language Language code
-     */
-    #[ORM\Column(length: 255)]
-    private ?string $language;
-
-    #[ORM\Column]
-    private ?string $text = null;
+    #[ORM\Column(length: 32)]
+    private string $urgency;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getKey(): ?string
+    public function getUrgency(): string
     {
-        return $this->key;
+        return $this->urgency;
     }
 
-    public function setKey(?string $key): void
+    public function setUrgency(string $urgency): void
     {
-        $this->key = $key;
+        $this->urgency = $urgency;
     }
 
-    public function getLanguage(): ?string
+    public function trans(TranslatorInterface $translator, string $locale = null): string
     {
-        return $this->language;
-    }
-
-    public function setLanguage(?string $language): void
-    {
-        $this->language = $language;
-    }
-
-    public function getText(): ?string
-    {
-        return $this->text;
-    }
-
-    public function setText(?string $text): void
-    {
-        $this->text = $text;
+        // TODO: Implement trans() method.
     }
 }
