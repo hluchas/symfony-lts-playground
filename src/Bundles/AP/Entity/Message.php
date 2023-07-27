@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace App\Bundles\AP\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
-use Symfony\Contracts\Translation\TranslatableInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'ap_message')]
-class Message implements TranslatableInterface
+class Message
 {
-    use TranslatableTrait;
-
     public const URGENCY_INFO = 'info';
     public const URGENCY_CRITICAL = 'critical';
 
@@ -25,6 +22,15 @@ class Message implements TranslatableInterface
 
     #[ORM\Column(length: 32)]
     private string $urgency;
+
+    /** @var Collection|MessageTranslation[] $translations */
+    #[ORM\OneToMany(mappedBy: 'message', targetEntity: MessageTranslation::class)]
+    private Collection $translations;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -41,8 +47,15 @@ class Message implements TranslatableInterface
         $this->urgency = $urgency;
     }
 
-    public function trans(TranslatorInterface $translator, string $locale = null): string
+    public function addTranslations(MessageTranslation $translation): self
     {
-        // TODO: Implement trans() method.
+        $this->translations->add($translation);
+
+        return $this;
+    }
+
+    public function getTranslations(): Collection
+    {
+        return $this->translations;
     }
 }
