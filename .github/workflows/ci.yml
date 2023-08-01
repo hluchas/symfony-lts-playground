@@ -74,13 +74,17 @@ jobs:
       - name: Run PHPStan
         run: composer run-script stan
 
-#      - name: Create database and schema
-#        run: |
-#          bin/console doctrine:database:create --env=test && bin/console doctrine:schema:create --env=test
-
-      # Test suite
+      # Unit Test suite
       - name: Run unit tests
-        run: composer run-script test
+        run: composer run-script unit
+
+      #      - name: Create database and schema
+      #        run: |
+      #          bin/console doctrine:database:create --env=test && bin/console doctrine:schema:create --env=test
+
+      # Functional Test suite
+      #- name: Run functional tests
+      #  run: composer run-script func
 
       # Yarn
       - name: Prepare Node for Yarn
