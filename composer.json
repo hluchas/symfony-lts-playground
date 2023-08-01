@@ -1,4 +1,6 @@
 {
+    "name": "hluchas/symfony-lts-playground",
+    "description": "just a playground for symfony 5.4 LTS",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -54,7 +56,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "requirements-checker": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -63,13 +66,19 @@
             "@auto-scripts"
         ],
         "all": [
-            "@fix",
+            "@check",
             "@stan",
             "@test"
         ],
-        "test": "bin/phpunit",
+        "test": [
+            "@unit",
+            "@func"
+        ],
+        "check": "php vendor/bin/php-cs-fixer fix --allow-risky=yes --dry-run",
+        "fix": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
         "stan": "vendor/bin/phpstan analyse src tests",
-        "fix": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+        "unit": "bin/phpunit --testsuite  'Unit Test Suite'",
+        "func": "bin/phpunit --testsuite  'Functional Test Suite'"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -88,6 +97,7 @@
         "symfony/css-selector": "5.4.*",
         "symfony/maker-bundle": "^1.48",
         "symfony/phpunit-bridge": "^6.2",
+        "symfony/requirements-checker": "^2.0",
         "symfony/stopwatch": "5.4.*",
         "symfony/web-profiler-bundle": "5.4.*"
     }

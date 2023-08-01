@@ -1,0 +1,58 @@
+#!/bin/bash
+
+COMPOSE="docker-compose"
+
+function build-all {
+    $COMPOSE up -d --build
+    build-app
+}
+
+function build-app {
+    ./dcp composer install
+    ./dcp bin/console cache:pool:clear cache.global_clearer
+    ./dcp yarn install
+    ./dcp yarn encore dev
+    ./dcp rm -rf var/log/*
+}
+
+function db-migrate {
+    ./dcp bin/console --no-interaction doctrine:migrations:migrate
+    ./dcp bin/console --no-interaction doctrine:migrations:migrate --env=test
+}
+
+function db-build {
+    ./dcp bin/console doctrine:database:create && ./dcp bin/console doctrine:schema:create
+    ./dcp bin/console doctrine:database:create --env=test && ./dcp bin/console doctrine:schema:create --env=test
+    db-migrate
+}
+
+function db-rebuild {
+    ./dcp bin/console doctrine:database:drop --force
+    ./dcp bin/console doctrine:database:drop --force --env=test
+    db-build
+}
+
+if [ $# -gt 0 ]; then
+    if [ "$1" == "up" ] || [ "$1" == "start" ]; then
+        $COMPOSE up -d
+    elif [ "$1" == "build" ] || [ "$1" == "rebuild" ]; then
+        build-all
+    elif [ "$1" == "build-app" ] || [ "$1" == "rebuild-app" ]; then
+        build-app
+    elif [ "$1" == "db-migrate" ]; then
+        db-migrate
+    elif [ "$1" == "db-build" ]; then
+        db-build
+    elif [ "$1" == "db-rebuild" ]; then
+        db-rebuild
+    elif [ "$1" == "reload" ] || [ "$1" == "restart" ]; then
+        $COMPOSE stop && $COMPOSE up -d
+    elif [ "$1" == "stop" ]; then
+        $COMPOSE stop
+    else
+        EXEC_CMD="cd /var/www && $@"
+        docker exec -it php bash -c "$EXEC_CMD"
+    fi
+else
+    $COMPOSE ps
+fi
