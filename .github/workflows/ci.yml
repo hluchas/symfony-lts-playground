@@ -74,9 +74,9 @@ jobs:
       - name: Run PHPStan
         run: composer run-script stan
 
-      - name: Create database and schema
-        run: |
-          bin/console doctrine:database:create --env=test && bin/console doctrine:schema:create --env=test
+#      - name: Create database and schema
+#        run: |
+#          bin/console doctrine:database:create --env=test && bin/console doctrine:schema:create --env=test
 
       # Test suite
       - name: Run unit tests
