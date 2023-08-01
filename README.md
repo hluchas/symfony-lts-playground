@@ -14,11 +14,6 @@ cp .env.dist .env && cp .env.test.dist .env.test
 ```
  - Got o http://localhost:8000
 ### Testing
-To be able to run functional tests against database test schema use
-```bash
-./dcp bin/console doctrine:database:create --env=test && ./dcp bin/console doctrine:schema:create --env=test
-```
-
 ```bash
 composer all #run all checks
 composer fix #run CS Fixer
