@@ -6,18 +6,24 @@
  - MySQL 8
  - Node v20.2.0
 ### Installation (dev)
+ - You need Docker to be installed on your machine (https://docs.docker.com/get-docker/) 
 ```bash
 cp .env.dist .env && cp .env.test.dist .env.test
-composer install
-bin/console doctrine:database:create && bin/console doctrine:schema:create 
-yarn install
-yarn watch
+./dcp build
+./dcp db-build
 ```
+ - Got o http://localhost:8000
 ### Testing
+To be able to run functional tests against database test schema use
 ```bash
-bin/console doctrine:database:create --env=test && bin/console doctrine:schema:create --env=test
+./dcp bin/console doctrine:database:create --env=test && ./dcp bin/console doctrine:schema:create --env=test
+```
+
+```bash
 composer all #run all checks
 composer fix #run CS Fixer
 composer stan #run PHPStan
-composer test #run PHPUnit tests
+composer test #run unit & functional tests
+composer unit #run unit tests
+composer func #run functional tests
 ```
