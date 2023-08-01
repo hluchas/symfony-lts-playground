@@ -22,3 +22,14 @@ composer test #run unit & functional tests
 composer unit #run unit tests
 composer func #run functional tests
 ```
+
+### XDebug in PHPStorm
+
+ - Configure DBGP
+    ![DBGP](doc/xdebug/dbgp.png)
+
+ - Configure path mappings
+   ![path](doc/xdebug/path.png)
+
+Download [XDebug helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) and set cookie value to `docker`.
+Now you have have the possibility to debug requests from browser.
